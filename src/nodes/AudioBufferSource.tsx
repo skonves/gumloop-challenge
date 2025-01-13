@@ -1,9 +1,11 @@
-import { Handle, Position } from "@xyflow/react";
-import { AppNode, AudioBufferSourceData, NodeComponent } from "./types";
-import { useSetNodes } from "../components/ChangeHandlerContext";
-import { Form, Input, NumberInput } from "../components/Inputs";
 import { useCallback } from "react";
+import { Handle, Position } from "@xyflow/react";
+
+import { useSetNodes } from "../components/ChangeHandlerContext";
+import { Form, Input, NumberInput, SelectInput } from "../components/Inputs";
+
 import { NodeBase } from "./NodeBase";
+import { AppNode, AudioBufferSourceData, NodeComponent } from "./types";
 
 function numberOrUnderfined(value: string): number | undefined {
   if (!value) return undefined;
@@ -30,6 +32,9 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
               delete newData.loopStart;
             }
 
+            if (newData.type === "file") delete newData.url;
+            if (newData.type === "url") delete newData.file;
+
             return {
               ...node,
               data: newData,
@@ -46,13 +51,35 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
   return (
     <NodeBase heading="Audio Buffer Source" selected={selected}>
       <Form>
-        <Input
-          label="file"
-          id={`${id}-file`}
-          type="file"
-          accept="audio/*"
-          onChange={async (e) => handleChange({ file: e.target.files?.[0] })}
-        />
+        <SelectInput
+          label="type"
+          id={`${id}-type`}
+          value={data.type}
+          onChange={(e) =>
+            handleChange({ type: e.target.value as "url" | "file" })
+          }
+        >
+          <option value="url">url</option>
+          <option value="file">file</option>
+        </SelectInput>
+        {data.type === "file" && (
+          <Input
+            label="file"
+            id={`${id}-file`}
+            type="file"
+            accept="audio/*"
+            onChange={async (e) => handleChange({ file: e.target.files?.[0] })}
+          />
+        )}
+        {data.type === "url" && (
+          <Input
+            label="url"
+            id={`${id}-url`}
+            type="text"
+            value={data.url}
+            onChange={(e) => handleChange({ url: e.target.value })}
+          />
+        )}
         <NumberInput
           label="detune"
           id={`${id}-detune`}

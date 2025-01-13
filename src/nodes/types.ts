@@ -4,18 +4,11 @@ export type NodeComponent<T extends Node> = React.FC<
   NodeProps & Pick<T, "data" | "type">
 >;
 
-// export type FunctionNode = Node<
-//   {
-//     label: string;
-//     func?: (input: any) => any;
-//     functionName: string;
-//   },
-//   "function-node"
-// >;
-
 export type AudioBufferSourceData = Node<
   {
+    type: "url" | "file";
     file?: File;
+    url?: string;
     detune?: number;
     loop?: boolean;
     loopEnd?: number;

@@ -14,17 +14,30 @@ export class Engine {
   async run(): Promise<void> {
     const audioNodes = new Map<string, AudioNode>();
 
-    // Create audio nodes
     for (const node of this.nodes) {
       switch (node.type) {
         case "audio-buffer-source": {
+          const getBuffer = async (): Promise<ArrayBuffer | null> => {
+            switch (node.data.type) {
+              case "file": {
+                if (!node.data.file) return null;
+                return await node.data.file!.arrayBuffer();
+              }
+              case "url": {
+                if (!node.data.url) return null;
+                const response = await fetch(node.data.url);
+                return await response.arrayBuffer();
+              }
+            }
+          };
+
+          const arrayBuffer = await getBuffer();
+
           const audioBufferSource = new AudioBufferSourceNode(
             this.audioContext,
             {
-              buffer: node.data.file
-                ? await this.audioContext.decodeAudioData(
-                    await node.data.file.arrayBuffer()
-                  )
+              buffer: arrayBuffer
+                ? await this.audioContext.decodeAudioData(arrayBuffer)
                 : null,
               loop: node.data.loop,
               loopStart: node.data.loopStart,

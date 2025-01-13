@@ -35,6 +35,7 @@ export function RunReportPanel({
       <div className="p-4 text-gray-600 flex flex-col gap-4">
         <Button onClick={() => engine.suspend()}>suspend</Button>
         <Button onClick={() => engine.resume()}>resume</Button>
+        <p>This site plays audio. The experience is best with headphones.</p>
         <p>
           You will need to re-run the flow after making changes in the editor.
           Closing this window will stop the audio.

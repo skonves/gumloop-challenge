@@ -1,14 +1,10 @@
 ![UI Preview](public/images/ui_preview.png)
 
-# Gumloop Coding Challenge
+# Gumloop Coding Challenge (Solution)
 
-👋
+This repository implements an interactive audio processing flow using the Web Audio API. The flow comprises several audio nodes, such as the AudioBufferSourceNode, DelayNode, and GainNode, connected to create a dynamic audio effect. Clicking the Run Flow button triggers audio playback, applying the configured effects.
 
-This is an open-ended challenge. The general goal is to make the flow do something useful when you click the 'Run Flow' button. It's totally up to you how simple or complex you want to make it.
-
-Feel free to set things up however you want. Honestly feel free to not even use this repo and start from scratch if you'd like.
-
-Also check out [react flow here](https://reactflow.dev/), it's an awesome project.
+Run the live version here: https://audio-context-explorer.netlify.app/
 
 ## Getting Started
 

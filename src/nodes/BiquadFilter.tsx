@@ -1,8 +1,9 @@
+import { useCallback } from "react";
 import { Handle, Position } from "@xyflow/react";
+
 import { AppNode, BiquadFilterData, NodeComponent } from "./types";
 import { useSetNodes } from "../components/ChangeHandlerContext";
 import { Form, NumberInput, SelectInput } from "../components/Inputs";
-import { useCallback } from "react";
 import { NodeBase } from "./NodeBase";
 
 function numberOrUnderfined(value: string): number | undefined {
