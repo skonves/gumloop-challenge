@@ -1,8 +1,9 @@
 import { Handle, Position } from "@xyflow/react";
 import { AppNode, AudioBufferSourceData, NodeComponent } from "./types";
 import { useSetNodes } from "../components/ChangeHandlerContext";
-import { Input, NumberInput } from "../components/Inputs";
+import { Form, Input, NumberInput } from "../components/Inputs";
 import { useCallback } from "react";
+import { NodeBase } from "./NodeBase";
 
 function numberOrUnderfined(value: string): number | undefined {
   if (!value) return undefined;
@@ -13,6 +14,7 @@ function numberOrUnderfined(value: string): number | undefined {
 const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
   id,
   data,
+  selected,
 }) => {
   const setNodes = useSetNodes();
 
@@ -42,11 +44,8 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
   );
 
   return (
-    <div
-      style={{ padding: "10px", border: "1px solid #000", borderRadius: "5px" }}
-    >
-      <h1>AudioBufferSourceNode</h1>
-      <form>
+    <NodeBase heading="Audio Buffer Source" selected={selected}>
+      <Form>
         <Input
           label="file"
           id={`${id}-file`}
@@ -57,7 +56,7 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
         <NumberInput
           label="detune"
           id={`${id}-detune`}
-          placeholder="detune"
+          placeholder="number"
           value={data.detune}
           onChange={(e) =>
             handleChange({ detune: numberOrUnderfined(e.target.value) })
@@ -67,7 +66,6 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
           label="loop"
           id={`${id}-loop`}
           type="checkbox"
-          placeholder="loop"
           checked={data.loop}
           onChange={(e) => handleChange({ loop: e.target.checked })}
         />
@@ -76,7 +74,7 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
             <NumberInput
               label="loopEnd"
               id={`${id}-loopEnd`}
-              placeholder="loopEnd"
+              placeholder="number"
               value={data.loopEnd}
               onChange={(e) =>
                 handleChange({ loopEnd: numberOrUnderfined(e.target.value) })
@@ -85,7 +83,7 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
             <NumberInput
               label="loopStart"
               id={`${id}-loopStart`}
-              placeholder="loopStart"
+              placeholder="number"
               value={data.loopStart}
               onChange={(e) =>
                 handleChange({ loopStart: numberOrUnderfined(e.target.value) })
@@ -96,15 +94,13 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
         <NumberInput
           label="playbackRate"
           id={`${id}-playbackRate`}
-          placeholder="playbackRate"
+          placeholder="number"
           value={data.playbackRate}
           onChange={(e) =>
             handleChange({ playbackRate: numberOrUnderfined(e.target.value) })
           }
         />
-      </form>
-
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      </Form>
 
       <Handle
         type="source"
@@ -112,7 +108,7 @@ const AudioBufferSource: NodeComponent<AudioBufferSourceData> = ({
         id={`${id}-out`}
         style={{ left: "50%" }}
       />
-    </div>
+    </NodeBase>
   );
 };
 

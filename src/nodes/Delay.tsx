@@ -1,5 +1,5 @@
 import { Handle, Position } from "@xyflow/react";
-import { AppNode, AudioDestinationData, NodeComponent } from "./types";
+import { AppNode, DelayData, NodeComponent } from "./types";
 import { useSetNodes } from "../components/ChangeHandlerContext";
 import { Form, NumberInput } from "../components/Inputs";
 import { useCallback } from "react";
@@ -11,18 +11,14 @@ function numberOrUnderfined(value: string): number | undefined {
   return isNaN(number) ? undefined : number;
 }
 
-const AudioDestination: NodeComponent<AudioDestinationData> = ({
-  id,
-  data,
-  selected,
-}) => {
+const Delay: NodeComponent<DelayData> = ({ id, data, selected }) => {
   const setNodes = useSetNodes();
 
   const handleChange = useCallback(
-    (change: Partial<AudioDestinationData["data"]>) => {
+    (change: Partial<DelayData["data"]>) => {
       setNodes((prevNodes) => {
         return prevNodes.map<AppNode>((node) => {
-          if (node.id === id && node.type === "audio-destination") {
+          if (node.id === id && node.type === "delay") {
             return {
               ...node,
               data: { ...node.data, ...change },
@@ -37,17 +33,15 @@ const AudioDestination: NodeComponent<AudioDestinationData> = ({
   );
 
   return (
-    <NodeBase heading="Audio Destination" selected={selected}>
+    <NodeBase heading="Delay" selected={selected}>
       <Form>
         <NumberInput
-          label="maxChannelCount"
-          id={`${id}-maxChannelCount`}
+          label="delayTime"
+          id={`${id}-delayTime`}
           placeholder="number"
-          value={data.maxChannelCount}
+          value={data.delayTime}
           onChange={(e) =>
-            handleChange({
-              maxChannelCount: numberOrUnderfined(e.target.value),
-            })
+            handleChange({ delayTime: numberOrUnderfined(e.target.value) })
           }
         />
       </Form>
@@ -58,8 +52,14 @@ const AudioDestination: NodeComponent<AudioDestinationData> = ({
         id={`${id}-in`}
         style={{ left: "50%" }}
       />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id={`${id}-out`}
+        style={{ left: "50%" }}
+      />
     </NodeBase>
   );
 };
 
-export default AudioDestination;
+export default Delay;

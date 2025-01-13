@@ -1,4 +1,5 @@
 import { Engine } from "../engine";
+import { Button } from "./Inputs";
 
 interface RunReportPanelProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ export function RunReportPanel({
       } z-40`}
     >
       <div className="flex justify-between items-center p-4 border-b">
-        <h2 className="text-xl font-bold">Run Report</h2>
+        <h2 className="text-xl font-bold">Audio Context Running...</h2>
         <button
           onClick={handleClose}
           className="text-gray-500 hover:text-gray-700 p-1"
@@ -31,10 +32,13 @@ export function RunReportPanel({
           ✕
         </button>
       </div>
-      <div className="p-4 text-gray-600">
-        <button onClick={() => engine.suspend()}>suspend</button>
-        <button onClick={() => engine.resume()}>resume</button>
-        <p>Output should go here</p>
+      <div className="p-4 text-gray-600 flex flex-col gap-4">
+        <Button onClick={() => engine.suspend()}>suspend</Button>
+        <Button onClick={() => engine.resume()}>resume</Button>
+        <p>
+          You will need to re-run the flow after making changes in the editor.
+          Closing this window will stop the audio.
+        </p>
       </div>
     </div>
   );

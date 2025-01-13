@@ -1,5 +1,5 @@
 import { Handle, Position } from "@xyflow/react";
-import { AppNode, AudioDestinationData, NodeComponent } from "./types";
+import { AppNode, StereoPannerData, NodeComponent } from "./types";
 import { useSetNodes } from "../components/ChangeHandlerContext";
 import { Form, NumberInput } from "../components/Inputs";
 import { useCallback } from "react";
@@ -11,7 +11,7 @@ function numberOrUnderfined(value: string): number | undefined {
   return isNaN(number) ? undefined : number;
 }
 
-const AudioDestination: NodeComponent<AudioDestinationData> = ({
+const StereoPanner: NodeComponent<StereoPannerData> = ({
   id,
   data,
   selected,
@@ -19,10 +19,10 @@ const AudioDestination: NodeComponent<AudioDestinationData> = ({
   const setNodes = useSetNodes();
 
   const handleChange = useCallback(
-    (change: Partial<AudioDestinationData["data"]>) => {
+    (change: Partial<StereoPannerData["data"]>) => {
       setNodes((prevNodes) => {
         return prevNodes.map<AppNode>((node) => {
-          if (node.id === id && node.type === "audio-destination") {
+          if (node.id === id && node.type === "stereo-panner") {
             return {
               ...node,
               data: { ...node.data, ...change },
@@ -37,17 +37,15 @@ const AudioDestination: NodeComponent<AudioDestinationData> = ({
   );
 
   return (
-    <NodeBase heading="Audio Destination" selected={selected}>
+    <NodeBase heading="StereoPanner" selected={selected}>
       <Form>
         <NumberInput
-          label="maxChannelCount"
-          id={`${id}-maxChannelCount`}
+          label="pan"
+          id={`${id}-pan`}
           placeholder="number"
-          value={data.maxChannelCount}
+          value={data.pan}
           onChange={(e) =>
-            handleChange({
-              maxChannelCount: numberOrUnderfined(e.target.value),
-            })
+            handleChange({ pan: numberOrUnderfined(e.target.value) })
           }
         />
       </Form>
@@ -58,8 +56,14 @@ const AudioDestination: NodeComponent<AudioDestinationData> = ({
         id={`${id}-in`}
         style={{ left: "50%" }}
       />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id={`${id}-out`}
+        style={{ left: "50%" }}
+      />
     </NodeBase>
   );
 };
 
-export default AudioDestination;
+export default StereoPanner;

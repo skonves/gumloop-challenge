@@ -12,8 +12,6 @@ export class Engine {
     (window as any).webkitAudioContext)();
 
   async run(): Promise<void> {
-    console.log("running nodes", this.nodes, this.edges);
-
     const audioNodes = new Map<string, AudioNode>();
 
     // Create audio nodes
@@ -43,6 +41,61 @@ export class Engine {
           audioNodes.set(node.id, audioDestination);
           break;
         }
+        case "biquad-filter": {
+          const biquadFilter = new BiquadFilterNode(this.audioContext, {
+            detune: node.data.detune,
+            frequency: node.data.frequency,
+            gain: node.data.gain,
+            Q: node.data.Q,
+            type: node.data.type,
+          });
+          audioNodes.set(node.id, biquadFilter);
+          break;
+        }
+        case "delay": {
+          const delay = new DelayNode(this.audioContext, {
+            delayTime: node.data.delayTime,
+          });
+          audioNodes.set(node.id, delay);
+          break;
+        }
+        case "dynamics-compressor": {
+          const dynamicsCompressor = new DynamicsCompressorNode(
+            this.audioContext,
+            {
+              attack: node.data.attack,
+              knee: node.data.knee,
+              ratio: node.data.ratio,
+              release: node.data.release,
+              threshold: node.data.threshold,
+            }
+          );
+          audioNodes.set(node.id, dynamicsCompressor);
+          break;
+        }
+        case "gain": {
+          const gain = new GainNode(this.audioContext, {
+            gain: node.data.gain,
+          });
+          audioNodes.set(node.id, gain);
+          break;
+        }
+        case "oscillator": {
+          const oscillator = new OscillatorNode(this.audioContext, {
+            type: node.data.type,
+            frequency: node.data.frequency,
+            detune: node.data.detune,
+          });
+          audioNodes.set(node.id, oscillator);
+          break;
+        }
+        case "stereo-panner": {
+          const stereoPanner = new StereoPannerNode(this.audioContext, {
+            pan: node.data.pan,
+          });
+          audioNodes.set(node.id, stereoPanner);
+          break;
+        }
         default:
           throw new Error(`Unknown node type: ${node.type}`);
       }
@@ -64,10 +117,10 @@ export class Engine {
 
     // Start source nodes
     for (const node of this.nodes) {
-      if (node.type === "audio-buffer-source") {
-        const audioBufferSource = audioNodes.get(
-          node.id
-        ) as AudioBufferSourceNode;
+      if (node.type === "audio-buffer-source" || node.type === "oscillator") {
+        const audioBufferSource = audioNodes.get(node.id) as
+          | AudioBufferSourceNode
+          | OscillatorNode;
         audioBufferSource.start();
       }
     }
